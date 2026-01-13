@@ -1,0 +1,33 @@
+HELP.md
+library-backend/target/
+library-backend/.mvn/wrapper/maven-wrapper.jar
+!library-backend/src/main/**/target/
+!library-backend/src/test/**/target/
+
+### STS ###
+library-backend/.apt_generated
+library-backend/.classpath
+library-backend/.factorypath
+library-backend/.project
+library-backend/.settings
+library-backend/.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!library-backend/src/main/**/build/
+!library-backend/src/test/**/build/
+
+### VS Code ###
+.vscode/
