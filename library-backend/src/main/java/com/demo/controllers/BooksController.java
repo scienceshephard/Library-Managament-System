@@ -1,5 +1,6 @@
 package com.demo.controllers;
 
+import com.demo.dto.PageResponse;
 import com.demo.model.Book;
 import com.demo.service.BookService;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,18 @@ public class BooksController {
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public PageResponse<Book> getAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return bookService.getAllBooksPaginated(page, size);
+    }
+
+    @GetMapping("/search")
+    public PageResponse<Book> searchBooks(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return bookService.searchBooks(query, page, size);
     }
 
     @GetMapping("/{id}")
@@ -32,6 +43,7 @@ public class BooksController {
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBook(book));
     }
+
     @PutMapping("/{id}")
     public Book updateBook(@PathVariable Long id, @RequestBody Book book) {
         return bookService.updateBook(id, book);
@@ -42,5 +54,5 @@ public class BooksController {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
-
 }
+

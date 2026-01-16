@@ -1,5 +1,6 @@
 /home/shephard/Desktop/Work/Java Apps/Library Managament System/library-frontend/src/main/java/com/Main.java
 /home/shephard/Desktop/Work/Java Apps/Library Managament System/library-frontend/src/main/java/com/controller/BookController.java
 /home/shephard/Desktop/Work/Java Apps/Library Managament System/library-frontend/src/main/java/com/model/Book.java
+/home/shephard/Desktop/Work/Java Apps/Library Managament System/library-frontend/src/main/java/com/model/PageResponse.java
 /home/shephard/Desktop/Work/Java Apps/Library Managament System/library-frontend/src/main/java/com/service/BookService.java
 /home/shephard/Desktop/Work/Java Apps/Library Managament System/library-frontend/src/main/java/com/util/AlertUtil.java

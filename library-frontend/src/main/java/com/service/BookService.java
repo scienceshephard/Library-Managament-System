@@ -1,16 +1,19 @@
 package com.service;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.model.Book;
-
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.model.Book;
+import com.model.PageResponse;
 
 
 public class BookService {
@@ -37,7 +40,61 @@ public class BookService {
             throw new RuntimeException("Failed to fetch books");
         }
 
-        return Arrays.asList(mapper.readValue(response.body(), Book[].class));
+        // Parse as PageResponse and extract content
+        PageResponse<Book> pageResponse = parsePageResponse(response.body());
+        return pageResponse.getContent();
+    }
+
+    public PageResponse<Book> getAllBooksPaginated(int page, int size) throws Exception {
+        String url = BASE_URL + "?page=" + page + "&size=" + size;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("Failed to fetch books");
+        }
+
+        return parsePageResponse(response.body());
+    }
+
+    public PageResponse<Book> searchBooks(String query, int page, int size) throws Exception {
+        String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
+        String url = BASE_URL + "/search?query=" + encodedQuery + "&page=" + page + "&size=" + size;
+        
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("Failed to search books");
+        }
+
+        return parsePageResponse(response.body());
+    }
+
+    private PageResponse<Book> parsePageResponse(String json) throws Exception {
+        // Parse the JSON into a generic map first, then extract Book list
+        var node = mapper.readTree(json);
+        PageResponse<Book> pageResponse = new PageResponse<>();
+        pageResponse.setPage(node.get("page").asInt());
+        pageResponse.setSize(node.get("size").asInt());
+        pageResponse.setTotalElements(node.get("totalElements").asLong());
+        pageResponse.setTotalPages(node.get("totalPages").asInt());
+        
+        List<Book> books = Arrays.asList(
+                mapper.treeToValue(node.get("content"), Book[].class));
+        pageResponse.setContent(books);
+        
+        return pageResponse;
     }
 
     public void addBook(Book book) throws Exception {
@@ -87,7 +144,5 @@ public class BookService {
             throw new RuntimeException("Failed to delete book");
         }
     }
-
-
-
 }
+

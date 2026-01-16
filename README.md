@@ -11,6 +11,7 @@ Library Management System/
 ├── library-backend/     # Spring Boot REST API
 │   └── src/main/java/com/demo/
 │       ├── controllers/     # REST Controllers
+│       ├── dto/             # Data Transfer Objects
 │       ├── model/           # Entity classes
 │       ├── repo/            # JPA Repositories
 │       ├── service/         # Business logic
@@ -19,7 +20,7 @@ Library Management System/
 └── library-frontend/    # JavaFX Desktop Application
     └── src/main/java/com/
         ├── controller/      # FXML Controllers
-        ├── model/           # Data models
+        ├── model/           # Data models (Book, PageResponse)
         ├── service/         # HTTP Client services
         └── util/            # Utility classes
 ```
@@ -49,7 +50,9 @@ Library Management System/
 
 ## ✨ Features
 
-- **📖 View Books** - Display all books in a table view
+- **📖 View Books** - Display all books in a paginated table view
+- **🔍 Search Books** - Filter books by title or author
+- **📄 Pagination** - Navigate through book pages with Previous/Next controls
 - **➕ Add Books** - Add new books with title, author, ISBN, and published date
 - **✏️ Update Books** - Modify existing book information
 - **🗑️ Delete Books** - Remove books from the library
@@ -116,13 +119,22 @@ The desktop application window will open automatically.
 
 The backend exposes the following REST API endpoints:
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/books` | Retrieve all books |
-| `GET` | `/api/books/{id}` | Retrieve a specific book |
-| `POST` | `/api/books` | Add a new book |
-| `PUT` | `/api/books/{id}` | Update an existing book |
-| `DELETE` | `/api/books/{id}` | Delete a book |
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| `GET` | `/api/books` | `page`, `size` | Retrieve paginated books |
+| `GET` | `/api/books/search` | `query`, `page`, `size` | Search books by title or author |
+| `GET` | `/api/books/{id}` | - | Retrieve a specific book |
+| `POST` | `/api/books` | - | Add a new book |
+| `PUT` | `/api/books/{id}` | - | Update an existing book |
+| `DELETE` | `/api/books/{id}` | - | Delete a book |
+
+### Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | int | 0 | Page number (0-indexed) |
+| `size` | int | 10 | Number of items per page |
+| `query` | string | - | Search term for title/author |
 
 ### Sample Request Body (POST/PUT)
 
@@ -132,6 +144,26 @@ The backend exposes the following REST API endpoints:
   "author": "F. Scott Fitzgerald",
   "isbn": "978-0-7432-7356-5",
   "publishedDate": "1925-04-10"
+}
+```
+
+### Sample Paginated Response (GET)
+
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "isbn": "978-0-7432-7356-5",
+      "publishedDate": "1925-04-10"
+    }
+  ],
+  "page": 0,
+  "size": 10,
+  "totalElements": 1,
+  "totalPages": 1
 }
 ```
 
@@ -151,7 +183,9 @@ The backend uses an **H2 in-memory database** for simplicity. Access the H2 Cons
 ## 📸 Application Screenshot
 
 The JavaFX frontend provides a clean interface with:
-- A table displaying all books (Title, Author, ISBN, Published Date)
+- A **search bar** to filter books by title or author
+- A **table** displaying all books (Title, Author, ISBN, Published Date)
+- **Pagination controls** (Previous/Next buttons with page indicator)
 - Input fields for book information
 - Action buttons for Add, Update, Delete, and Refresh
 

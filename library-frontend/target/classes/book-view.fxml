@@ -2,6 +2,7 @@
 
 
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.DatePicker?>
@@ -14,21 +15,40 @@
             <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>
 
-    <TableView fx:id="table">
+    <!-- Search Section -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="searchField" promptText="Search by title or author..." prefWidth="300"/>
+        <Button text="Search" onAction="#searchBooks"/>
+        <Button text="Clear" onAction="#clearSearch"/>
+    </HBox>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="titleCol" text="Title" />
-            <TableColumn fx:id="authorCol" text="Author" />
-            <TableColumn fx:id="isbnCol" text="ISBN" />
-            <TableColumn fx:id="dateCol" text="Published Date"/>
+            <TableColumn fx:id="titleCol" text="Title" prefWidth="150"/>
+            <TableColumn fx:id="authorCol" text="Author" prefWidth="150"/>
+            <TableColumn fx:id="isbnCol" text="ISBN" prefWidth="120"/>
+            <TableColumn fx:id="dateCol" text="Published Date" prefWidth="120"/>
         </columns>
     </TableView>
 
+    <!-- Pagination Controls -->
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="prevBtn" text="← Previous" onAction="#previousPage"/>
+        <Label fx:id="pageLabel" text="Page 1 of 1"/>
+        <Button fx:id="nextBtn" text="Next →" onAction="#nextPage"/>
+    </HBox>
+
+    <!-- Book Form -->
     <TextField fx:id="titleField" promptText="Title"/>
     <TextField fx:id="authorField" promptText="Author"/>
     <TextField fx:id="isbnField" promptText="ISBN"/>
     <DatePicker fx:id="publishedDatePicker" promptText="Published Date"/>
-    <Button text="Add Book" onAction="#addBook"/>
-    <Button text="Update" onAction="#updateBook"/>
-    <Button text="Delete" onAction="#deleteBook"/>
-    <Button text="Refresh" onAction="#loadBooks"/>
+    
+    <!-- Action Buttons -->
+    <HBox spacing="10">
+        <Button text="Add Book" onAction="#addBook"/>
+        <Button text="Update" onAction="#updateBook"/>
+        <Button text="Delete" onAction="#deleteBook"/>
+        <Button text="Refresh" onAction="#loadBooks"/>
+    </HBox>
 </VBox>
