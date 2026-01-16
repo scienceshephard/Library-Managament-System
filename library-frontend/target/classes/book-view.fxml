@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controller.BookController"
+      spacing="10">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+    <TableView fx:id="table">
+        <columns>
+            <TableColumn fx:id="titleCol" text="Title" />
+            <TableColumn fx:id="authorCol" text="Author" />
+            <TableColumn fx:id="isbnCol" text="ISBN" />
+            <TableColumn fx:id="dateCol" text="Published Date"/>
+        </columns>
+    </TableView>
+
+    <TextField fx:id="titleField" promptText="Title"/>
+    <TextField fx:id="authorField" promptText="Author"/>
+    <TextField fx:id="isbnField" promptText="ISBN"/>
+    <DatePicker fx:id="publishedDatePicker" promptText="Published Date"/>
+    <Button text="Add Book" onAction="#addBook"/>
+    <Button text="Update" onAction="#updateBook"/>
+    <Button text="Delete" onAction="#deleteBook"/>
+    <Button text="Refresh" onAction="#loadBooks"/>
+</VBox>
